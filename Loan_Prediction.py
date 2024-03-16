@@ -3,10 +3,11 @@ import numpy as np
 import streamlit as st
 import wget
 
+"""
 
 model_name = "RF_Loan_model.joblib"
 file_url_alternative = "https://github.com/mevlutkoz/Streamlit/blob/main/RF_Loan_model.joblib"
-file_url = "https://raw.githubusercontent.com/mevlutkoz/Streamlit/RF_Loan_model.joblib"
+#file_url = "https://raw.githubusercontent.com/mevlutkoz/Streamlit/RF_Loan_model.joblib"
 wget.download(file_url_alternative)
 model = joblib.load(model_name)
 
@@ -56,7 +57,7 @@ def prediction(Gender,Married,Dependents,
         else:
             pred = "Approved"
         return pred      
-
+"""
 
 def main():
     # This is Front-End of the website
@@ -76,6 +77,7 @@ def main():
     Credit_History = st.selectbox("Credit History",("Outstanding Loan", "No Outstanding Loan"))
     Property_Area = st.selectbox("Property Area", ("Rural", "Urban", "Semi Urban"))
 
+    """"
     if st.button("Predict"):
         result = prediction(Gender,Married,Dependents,Education,Self_Employed,ApplicantIncome,CoapplicantIncome,LoanAmount,Loan_Amount_Term,Credit_History,Property_Area)
 
@@ -84,6 +86,8 @@ def main():
         else:
             st.error("Fukara piç")
         
+    """       
+
 if __name__ == "__name__":
     main()
 
