@@ -1,0 +1,226 @@
+- Deploy machine learning model as the web application with the help of Streamlit Framework
+- Streamlit is a free and open-source framework to rapidly build and share beautiful machine learning and data science web apps
+- It is a Python-based library specifically designed for machine learning engineers / Data scientist
+
+- Why Use Streamlit:
+	- Streamlit is an open-source Python libraru for rapidly creating attractive user interface
+	- Building an effective and intuitive user interface is crucial for application success
+	- Streamlit allows users with no web development experience to create web applications effortlessly
+	- It is ideal for data scientist looking to deploy models quickliy and easily
+	- Many data-heavy apps struggle with UI development, but Streamlit simplifies process
+
+- Benefits of Streamlit
+	- No need for front-end(HTML, JS, CSS) knowledge
+	- Quick development, enabling beautiful machine learning and data science apps in hour or minutes.
+	- Compatibility with popular Python libraries like pandas, matplotlib, seaborn, plotly, Keras, PyTroch, and SymPy(latex).
+	- Requires less code to create impressive web apps.
+	- Offers data caching to simplify and speed up computation pipelines.
+
+- We build a a machine learning model --> we will be deploying it as Streamlit application --> That would enable us to start the 			conversation with the client about the potential benefit of machine learning project
+
+---- HANDS ON STREAMLIT ----
+
+- Streamlit turn data scripits into shareable web apps in minutes. All in pure Python. No fron-end experience required.
+
+$pip install streamlit    ==> To install streamlit
+$streamlit hello          ==> To check whether installation is successful or not, it will launch demo streamlit application
+
+
+- Create a directory DEMO --> inside it create a python file --> 'app.py': --> to run: '$streamlit run app.py'
+
+	> import streamlit as st
+ 	
+ 	> st.title("Streamlit Demo MLOPS")   ==> This will give title to the page (Sayfa açılınca kocaman bu yazıyor önünde)
+
+ 	> st.header("Heading of Streamlit")
+ 	> st.subheader("Sub-heading of Streamlit")
+ 	> st.text("This is an example text")
+
+ 	> st.success("Success")  ==> Yeşil arka planda 'Success' yazıyor
+ 	> st.warning("Warning")  ==> Sarı arka planda 'Warning' yazıyor
+ 	> st.info("Information") ==> Mavi arka planda 'Information' yazıyor
+ 	> st.error("Error")      ==> Kırmızı arka planda 'Error' yazıyor
+
+ 	# st.checkbox("Select/Unselect")  ==> select box ekliyoruz app'e eger tik atarsa true gönderiyor bize atmazsa false
+
+ 	> if st.checkbok("Select/Unselect"):
+ 		st.text("User selected the checkbox")
+ 	> else:
+ 		st.text("User has not selected the checkbox")
+
+
+ 	> state = st.radio("What is your favorite Color ?",
+ 	("Red", "Green", "Yellow"))                          ==> Whatever user will select, it is stored in 'state' variable
+
+ 	> if(state == "Gree"):
+ 		st.success("That is my favorite color as well")
+
+ 	> occupation = st.selectbox("What do you do", 
+ 	["Student", "Vlogger", "Engineer"])                  ==> Whatever user will select, it is stored in 'occupation' variable
+
+ 	> st.text(f"Selected option is {occupation}")        ==> We are using the selectbox result here
+
+ 	# st.button("Example")  ==> If user clicks it, it sends input as true
+
+ 	> if st.button("Example"):
+ 		st.text("You clicked it")
+
+ 	> st.sidebar.header("Heading of sidebar")
+ 	> st.sidebar.text("Created by baba mevlut")
+
+
+ - Go to 'streamlit.io' page, click on the "Sing up for Streamlit Community Cloud"  --> Which will help us deploy our code to cloud as 		streamlit application  -ere-> To do that we have to login into our github account and upload the file there:
+ 		- Create new repository called: 'streamlit_demo' --> upload the 'app.py' file to the repository.
+ 		- Then sign in the streamlit.io with your github account (sign up with github option) for cloud. 
+
+
+---- DEPLOY ML APPLICATION AS WEB APPLICATION ----
+
+ - requirements.txt:
+
+ 		numpy==1.24.3
+ 		pandas==1.5.3
+ 		joblib==1.2.0
+ 		scikit-learn==1.2.2
+ 		streamlit
+ 		wget
+
+ 	$conda create -n streamlit-env python=3.10
+	$conda activate streamlit-env
+	$pip install -r requirements.txt
+
+- The inputs we are expecting from the users are ==> Gender, Married, Dependents, Education, Self_Employement, LoanAmount, 																	 Loan_Amount_Term, Credit_History, Property_Area, TotalIncome
+
+- After taking the inputs from the user, we need to perform preprocessing on these data.
+
+- Model için gene 'train.py' isimli dosyamızı kullanacagız:
+	- Performing transformation, preprocessing, feature engineering, encoding, implementing the model
+	- After getting the input from user we have to encode the numerical columns
+
+- streamlit-ml-app.py:
+	
+	> import joblib
+	> import streamlit
+	> import wget
+
+
+	# Git-hub'a atıp kullanılacagı için Git-hub pathini vermemiz gerekiyor yoksa File Not Found hatası vericek
+	> model_name = "RF_Loan_model.joblib"
+	> file_url = "https://raw.githubusercontent.com/.../RF_Loan_model.joblib"
+	> wget.download(file_url)
+	> model = joblib.load(model_name)
+
+
+	>def prediction(Gender, Married, Dependents, Education, Self_Employed, ApplicantIncome, CoapplicantIncome,LoanAmount, 																					 Loan_Amount_Term, Credit_History, Property_Area):
+
+		if Gender == "Male":
+            Gender = 1
+        else:
+            Gender = 0
+
+        
+        if Married == "Yes":
+            Married = 1
+        else:
+            Married = 0
+
+
+        if Education == "Graduate":
+            Education = 0
+        else:
+            Education = 1
+        
+
+        if Self_Employed == "Yes":
+            Self_Employed = 1
+        else:
+            Self_Employed = 0
+
+
+        if Credit_History == "Outstanding Loan":
+            Credit_History = 1
+        else:
+            Credit_History = 0   
+        
+
+        if Property_Area == "Rural":
+            Property_Area = 0
+        elif Property_Area == "Semi Urban":
+            Property_Area = 1  
+        else:
+            Property_Area = 2  
+        
+        Total_Income = np.log(ApplicantIncome + CoapplicantIncome)
+
+
+        prediction = model.predict([[Gender, Married, Dependents, Education, Self_Employed,LoanAmount, Loan_Amount_Term, 											Credit_History, Property_Area,Total_Income]])
+
+        print(print(prediction))
+
+       	if predicition == 0:
+       		pred = "Rejected"
+       	else:
+       		pred = "Approved"
+
+       	return pred
+
+
+
+	> def main():
+		# Front End
+
+		st.title("Welcome to load application")
+		st.header("Please enter your details to proceed with your loan application")
+
+		Gender = st.selectbox("Gender", ("Male", "Female"))
+		Married = st.selectbox("Married", ("Yes", "No"))
+		Dependents = st.number_inpıts("Number of Dependents")
+		Education = st.selectbox("Education", ("Graduate", "Not Graduate"))
+		Self_Employed = st.selectbox("Self Employed", ("Yes", "No"))
+		ApplicantIncome = st.number_input("Applicant Income")
+		CoapplicantIncome = st.number_input("Coapplicant Income")
+		LoanAmount = st.number_input("LoanAmount")
+		Loan_Amount_Term = st.number_input("Loan Amount Term")
+		Credit_History = st.selectbox("Credit History", ("Outstanding Loan", "No Outstanding Loan"))
+		Property_Area= st.selectbox("Property Area", ("Rural, "Urban", "Semi Urban"))
+
+		
+		if st.button("Predict"):
+			result = prediction(Gender, Married, Dependents, Education, Self_Employed, ApplicantIncome, CoapplicantIncome,
+								LoanAmount, Loan_Amount_Term, Credit_History, Property_Area)
+
+			if result == "Approved":
+				st.success("Your Loan Application is Approved")
+			else:
+				st.error("Your Loan Application is Rejected")
+
+	
+
+
+	> if __name__ == "__main__":
+		main()
+
+
+
+$ python train.py
+$streamlit run streamlit-ml-app.py
+
+
+
+- We converted our machine learning model to web application, we write a front-end for it.
+- There is a button on our web-page 'Deploy' --> 'Streamlit Community Cloud' --> 'Deploy Now' --> 'It says it is not pushed to github'
+- So we need to push this project to Git-hub to deploy.
+- When we push it to our Git-hub repository, we are able to push it. (Login with Github)
+
+
+
+
+
+
+
+
+
+
+
+
+
