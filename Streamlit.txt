@@ -169,7 +169,7 @@ $streamlit hello          ==> To check whether installation is successful or not
 	> def main():
 		# Front End
 
-		st.title("Welcome to load application")
+		st.title("Welcome to loan application")
 		st.header("Please enter your details to proceed with your loan application")
 
 		Gender = st.selectbox("Gender", ("Male", "Female"))
